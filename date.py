@@ -1,7 +1,8 @@
 class Date:
-    """Egy egyszerű Date osztály, amely tartalmazza az év, hónap, nap, óra és perc mezőket."""
+    """Date osztály, amely tartalmazza az év, hónap, nap, óra és perc mezőket."""
 
     def __init__(self, year, month, day, hour=0, minute=0):
+        """Inicializálja a dátumot a megadott év, hónap, nap, óra és perc értékekkel."""
         self.year = year
         self.month = month
         self.day = day
@@ -9,9 +10,11 @@ class Date:
         self.minute = minute
 
     def __str__(self):
+        """Visszaadja a dátum szöveges formátumát 'YYYY-MM-DD HH:MM' formában."""
         return f"{self.year:04d}-{self.month:02d}-{self.day:02d} {self.hour:02d}:{self.minute:02d}"
 
     def __eq__(self, other):
+        """Meghatározza, hogy két Date objektum egyenlő-e az év, hónap, nap, óra és perc alapján."""
         if not isinstance(other, Date):
             return False
         return (self.year == other.year and
@@ -21,10 +24,12 @@ class Date:
                 self.minute == other.minute)
 
     def is_weekend(self):
+        """Ellenőrzi, hogy a dátum szombatra vagy vasárnapra esik-e."""
         day_of_week = self.get_day_of_week()
         return day_of_week in [5, 6]
 
     def get_day_of_week(self):
+        """Meghatározza a hét napját a dátum alapján (0 = hétfő, 6 = vasárnap)."""
         y = self.year
         m = self.month
         if m == 1 or m == 2:
@@ -37,6 +42,7 @@ class Date:
         return (h + 5) % 7
 
     def increment_day(self):
+        """Növeli az aktuális dátumot egy nappal, és frissíti a hónapot és az évet, ha szükséges."""
         r_date = Date(self.year, self.month, self.day, self.hour, self.minute)
         r_date.day += 1
         if r_date.day > r_date.get_days_in_month():
@@ -48,6 +54,7 @@ class Date:
         return r_date
 
     def get_days_in_month(self):
+        """Visszaadja az aktuális hónap napjainak számát, figyelembe véve a szökőéveket is."""
         if self.month in [4, 6, 9, 11]:
             return 30
         elif self.month == 2:
@@ -56,6 +63,7 @@ class Date:
             return 31
 
     def is_leap_year(self):
+        """Eldönti, hogy az adott év szökőév-e."""
         if self.year % 400 == 0:
             return True
         if self.year % 100 == 0:
@@ -65,6 +73,7 @@ class Date:
         return False
 
     def adjust_to_working_hours(self):
+        """Igazítja a dátumot munkaidőhöz. Ha az idő 9:00 előtt vagy 17:00 után van, akkor a megfelelő következő időpontra állítja"""
         r_date = Date(self.year, self.month, self.day, self.hour, self.minute)
         if r_date.is_weekend():
             r_date.hour = 9
@@ -83,6 +92,7 @@ class Date:
         return r_date
 
     def add_working_days(self, workdays_to_add):
+        """Hozzáad egy adott számú munkanapot a dátumhoz, figyelembe véve a hétvégéket."""
         r_date = Date(self.year, self.month, self.day, self.hour, self.minute)
         day_of_week = r_date.get_day_of_week()
         if day_of_week == 5:
@@ -103,6 +113,7 @@ class Date:
         return r_date
 
     def calculate_date(self, time):
+        """Kiszámítja, hogy mennyi idővel később (órákban) esedékes a bejelentés teljesítése, figyelembe véve a munkaidőt és a hétvégéket."""
         r_date = Date(self.year, self.month, self.day, self.hour, self.minute)
         r_date = r_date.adjust_to_working_hours()
         plus_hours_minus_one = 0
